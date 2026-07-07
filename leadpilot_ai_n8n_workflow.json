@@ -86,8 +86,8 @@
     },
     {
       "parameters": {
-        "operation": "upsert",
-        "base": "={{$env.AIRTABLE_BASE_ID}}",
+        "operation": "create",
+        "base": "https://airtable.com/appRAWorY6yPb4QJn",
         "table": "Leads",
         "columns": {
           "mappingMode": "defineBelow",
@@ -180,7 +180,7 @@
     {
       "parameters": {
         "operation": "create",
-        "base": "={{$env.AIRTABLE_BASE_ID}}",
+        "base": "https://airtable.com/appRAWorY6yPb4QJn",
         "table": "Errores",
         "columns": {
           "mappingMode": "defineBelow",
@@ -294,15 +294,18 @@
     },
     {
       "parameters": {
-        "operation": "update",
-        "base": "={{$env.AIRTABLE_BASE_ID}}",
-        "table": "Leads",
+        "operation": "create",
+        "base": "https://airtable.com/appRAWorY6yPb4QJn",
+        "table": "Errores",
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Estado": "Contactado",
-            "Decision Humana": "Aprobado",
-            "Fecha Ultima Accion": "={{$now}}"
+            "Error ID": "={{\"LOG-\" + $now.toMillis()}}",
+            "Origen": "Estado final",
+            "Detalle": "Lead aprobado por humano y respuesta enviada por Gmail",
+            "Lead Email": "={{$json.lead_email}}",
+            "Estado": "Cerrado manual",
+            "Fecha": "={{$now}}"
           }
         }
       },
@@ -324,7 +327,7 @@
     {
       "parameters": {
         "operation": "create",
-        "base": "={{$env.AIRTABLE_BASE_ID}}",
+        "base": "https://airtable.com/appRAWorY6yPb4QJn",
         "table": "Errores",
         "columns": {
           "mappingMode": "defineBelow",
@@ -354,7 +357,7 @@
     },
     {
       "parameters": {
-        "content": "Variables: APPROVER_EMAIL, N8N_WEBHOOK_URL. Sin API keys hardcodeadas. Filtro Gmail desde ahora. Error handling registra fallas y datos faltantes. HITL por Gmail."
+        "content": "Base Airtable: appRAWorY6yPb4QJn. Credenciales: Gmail account y Airtable Personal Access Token account. OpenAI queda para credencial del profesor. HITL por Gmail."
       },
       "id": "sticky",
       "name": "Notas de arquitectura limpia",
