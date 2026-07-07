@@ -29,10 +29,10 @@ LeadPilot AI automatiza la gestion de leads B2B recibidos por Gmail. El sistema 
 Las credenciales de Gmail, Airtable, Slack y OpenAI deben configurarse en n8n Credentials. No se incluyen API keys ni secretos en el JSON.
 
 ## Link a base de datos
-Completar al publicar: `[Airtable en modo lectura](PEGAR_LINK_AIRTABLE_AQUI)`
+[Airtable en modo lectura](https://airtable.com/appRAWorY6yPb4QJn/tblpPC08f9CYgvRXV/viwOFGhewXfTTjr3h)
 
 ## Link a repositorio GitHub
-Completar al publicar: `[Repositorio GitHub](PEGAR_LINK_GITHUB_AQUI)`
+[Repositorio GitHub](https://github.com/ocapizza/leadpilot-ai-tp-final)
 
 ## Check de seguridad
 - Filtro anti bucles en Gmail mediante busqueda de correos recientes y palabras clave.
