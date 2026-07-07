@@ -39,7 +39,7 @@
       "credentials": {
         "gmailOAuth2": {
           "id": "GMAIL_CREDENTIAL_ID",
-          "name": "Gmail OAuth"
+          "name": "Gmail account"
         }
       }
     },
@@ -113,7 +113,7 @@
       "credentials": {
         "airtableTokenApi": {
           "id": "AIRTABLE_CREDENTIAL_ID",
-          "name": "Airtable Token"
+          "name": "Airtable Personal Access Token account"
         }
       }
     },
@@ -204,7 +204,7 @@
       "credentials": {
         "airtableTokenApi": {
           "id": "AIRTABLE_CREDENTIAL_ID",
-          "name": "Airtable Token"
+          "name": "Airtable Personal Access Token account"
         }
       }
     },
@@ -288,7 +288,7 @@
       "credentials": {
         "gmailOAuth2": {
           "id": "GMAIL_CREDENTIAL_ID",
-          "name": "Gmail OAuth"
+          "name": "Gmail account"
         }
       }
     },
@@ -317,7 +317,7 @@
       "credentials": {
         "airtableTokenApi": {
           "id": "AIRTABLE_CREDENTIAL_ID",
-          "name": "Airtable Token"
+          "name": "Airtable Personal Access Token account"
         }
       }
     },
@@ -348,7 +348,7 @@
       "credentials": {
         "airtableTokenApi": {
           "id": "AIRTABLE_CREDENTIAL_ID",
-          "name": "Airtable Token"
+          "name": "Airtable Personal Access Token account"
         }
       }
     },
