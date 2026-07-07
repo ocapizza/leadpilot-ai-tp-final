@@ -3,14 +3,13 @@
 Trabajo practico final para AI Automation.
 
 ## Caso de uso
-LeadPilot AI automatiza la gestion de leads B2B recibidos por Gmail. El sistema registra el lead en Airtable, usa OpenAI para clasificarlo y redactar una respuesta, solicita aprobacion humana por Slack y finalmente responde por Gmail manteniendo el hilo original.
+LeadPilot AI automatiza la gestion de leads B2B recibidos por Gmail. El sistema registra el lead en Airtable, usa OpenAI para clasificarlo y redactar una respuesta, solicita aprobacion humana por Gmail y finalmente responde manteniendo el hilo original.
 
 ## Tecnologias integradas
 - n8n: orquestador principal del flujo.
 - Airtable: memoria del sistema y registro de estados.
 - OpenAI GPT: procesamiento IA con prompt estructurado y salida JSON.
-- Slack: punto Human-in-the-loop para aprobacion.
-- Gmail: canal de entrada y salida multicanal.
+- Gmail: canal de entrada, salida y punto Human-in-the-loop para aprobacion.
 
 ## Archivos del entregable
 - `LeadPilot_AI_Diagrama_Arquitectura.pdf`: documento PDF con arquitectura, resiliencia, HITL y pruebas.
@@ -23,13 +22,16 @@ LeadPilot AI automatiza la gestion de leads B2B recibidos por Gmail. El sistema 
 
 ## Variables requeridas en n8n
 - `AIRTABLE_BASE_ID`
-- `SLACK_APPROVAL_CHANNEL`
+- `APPROVER_EMAIL`
 - `N8N_WEBHOOK_URL`
 
-Las credenciales de Gmail, Airtable, Slack y OpenAI deben configurarse en n8n Credentials. No se incluyen API keys ni secretos en el JSON.
+Las credenciales de Gmail, Airtable y OpenAI deben configurarse en n8n Credentials. No se incluyen API keys ni secretos en el JSON. La credencial de OpenAI queda pendiente para que el profesor use su propia API key al corregir.
 
 ## Link a base de datos
-[Airtable en modo lectura](https://airtable.com/appRAWorY6yPb4QJn/tblpPC08f9CYgvRXV/viwOFGhewXfTTjr3h)
+[Airtable - tabla Leads](https://airtable.com/appRAWorY6yPb4QJn/tblEx4UKF4j0bkVvr/viwd1TlkGIsdGkjva)
+
+## Link a workflow n8n
+[Workflow n8n Cloud](https://delroy2026.app.n8n.cloud/workflow/qSfCEYFOYzLFvlGc?projectId=KJrQfW9cIoac0mkH)
 
 ## Link a repositorio GitHub
 [Repositorio GitHub](https://github.com/ocapizza/leadpilot-ai-tp-final)

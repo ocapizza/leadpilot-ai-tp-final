@@ -86,9 +86,18 @@
     },
     {
       "parameters": {
+        "authentication": "airtableTokenApi",
+        "resource": "record",
         "operation": "create",
-        "base": "https://airtable.com/appRAWorY6yPb4QJn",
-        "table": "Leads",
+        "base": {
+          "mode": "id",
+          "value": "appRAWorY6yPb4QJn"
+        },
+        "table": {
+          "mode": "id",
+          "value": "tblEx4UKF4j0bkVvr",
+          "cachedResultName": "Leads"
+        },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
@@ -105,7 +114,7 @@
       "id": "airtable-upsert",
       "name": "03 Airtable - Registrar lead",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 1,
+      "typeVersion": 2.2,
       "position": [
         -500,
         80
@@ -179,9 +188,18 @@
     },
     {
       "parameters": {
+        "authentication": "airtableTokenApi",
+        "resource": "record",
         "operation": "create",
-        "base": "https://airtable.com/appRAWorY6yPb4QJn",
-        "table": "Errores",
+        "base": {
+          "mode": "id",
+          "value": "appRAWorY6yPb4QJn"
+        },
+        "table": {
+          "mode": "id",
+          "value": "tblPzlExjEdmdvXwU",
+          "cachedResultName": "Errores"
+        },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
@@ -196,7 +214,7 @@
       "id": "airtable-error-data",
       "name": "06 Error Handling - Registrar datos faltantes",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 1,
+      "typeVersion": 2.2,
       "position": [
         240,
         -80
@@ -294,9 +312,18 @@
     },
     {
       "parameters": {
+        "authentication": "airtableTokenApi",
+        "resource": "record",
         "operation": "create",
-        "base": "https://airtable.com/appRAWorY6yPb4QJn",
-        "table": "Errores",
+        "base": {
+          "mode": "id",
+          "value": "appRAWorY6yPb4QJn"
+        },
+        "table": {
+          "mode": "id",
+          "value": "tblPzlExjEdmdvXwU",
+          "cachedResultName": "Errores"
+        },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
@@ -312,7 +339,7 @@
       "id": "airtable-update-ok",
       "name": "11 Airtable - Actualizar estado final",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 1,
+      "typeVersion": 2.2,
       "position": [
         1220,
         60
@@ -326,9 +353,18 @@
     },
     {
       "parameters": {
+        "authentication": "airtableTokenApi",
+        "resource": "record",
         "operation": "create",
-        "base": "https://airtable.com/appRAWorY6yPb4QJn",
-        "table": "Errores",
+        "base": {
+          "mode": "id",
+          "value": "appRAWorY6yPb4QJn"
+        },
+        "table": {
+          "mode": "id",
+          "value": "tblPzlExjEdmdvXwU",
+          "cachedResultName": "Errores"
+        },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
@@ -343,7 +379,7 @@
       "id": "airtable-rejected",
       "name": "12 Ruta alternativa - Registrar rechazo",
       "type": "n8n-nodes-base.airtable",
-      "typeVersion": 1,
+      "typeVersion": 2.2,
       "position": [
         980,
         280
