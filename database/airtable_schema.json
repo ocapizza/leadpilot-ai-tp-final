@@ -1,0 +1,142 @@
+{
+  "schema": [
+    [
+      "Leads",
+      "Lead ID",
+      "Autonumber",
+      "Identificador unico"
+    ],
+    [
+      "Leads",
+      "Nombre",
+      "Texto",
+      "Nombre detectado desde Gmail"
+    ],
+    [
+      "Leads",
+      "Email",
+      "Email",
+      "Clave para evitar duplicados"
+    ],
+    [
+      "Leads",
+      "Empresa",
+      "Texto",
+      "Empresa del lead si aparece"
+    ],
+    [
+      "Leads",
+      "Asunto",
+      "Texto",
+      "Asunto del email"
+    ],
+    [
+      "Leads",
+      "Mensaje Original",
+      "Long text",
+      "Texto recibido"
+    ],
+    [
+      "Leads",
+      "Estado",
+      "Single select",
+      "Pendiente IA, Procesado por IA, Aprobado por Humano, Contactado, Error"
+    ],
+    [
+      "Leads",
+      "Score IA",
+      "Numero",
+      "Puntaje 0 a 100"
+    ],
+    [
+      "Leads",
+      "Prioridad",
+      "Single select",
+      "Alta, Media, Baja"
+    ],
+    [
+      "Leads",
+      "Thread ID",
+      "Texto",
+      "Hilo de Gmail"
+    ],
+    [
+      "Leads",
+      "Respuesta Sugerida",
+      "Long text",
+      "Borrador generado por IA"
+    ],
+    [
+      "Leads",
+      "Decision Humana",
+      "Single select",
+      "Pendiente, Aprobado, Rechazado"
+    ],
+    [
+      "Leads",
+      "Relacion Cliente",
+      "Link to Clientes",
+      "Relacion para evitar datos aislados"
+    ],
+    [
+      "Clientes",
+      "Cliente ID",
+      "Autonumber",
+      "Identificador"
+    ],
+    [
+      "Clientes",
+      "Empresa",
+      "Texto",
+      "Empresa"
+    ],
+    [
+      "Clientes",
+      "Contacto Principal",
+      "Email",
+      "Contacto"
+    ],
+    [
+      "Clientes",
+      "Leads",
+      "Linked records",
+      "Relacion con Leads"
+    ],
+    [
+      "Errores",
+      "Error ID",
+      "Autonumber",
+      "Identificador"
+    ],
+    [
+      "Errores",
+      "Origen",
+      "Texto",
+      "Nodo o etapa que fallo"
+    ],
+    [
+      "Errores",
+      "Detalle",
+      "Long text",
+      "Detalle tecnico o datos faltantes"
+    ],
+    [
+      "Errores",
+      "Lead Email",
+      "Email",
+      "Referencia al lead"
+    ],
+    [
+      "Errores",
+      "Estado",
+      "Single select",
+      "Pendiente correccion, Reintentado, Cerrado manual"
+    ],
+    [
+      "Errores",
+      "Fecha",
+      "Datetime",
+      "Momento del error"
+    ]
+  ]
+}

@@ -1,0 +1,8 @@
+Test de estres ejecutado localmente - simulacion funcional
+Fecha: 2026-07-07
+
+T01 | OK | Score=88 | Ruta=Camino feliz | Entrada=Lead completo de empresa fintech solicita automatizar soporte | Esperado=Aprobacion y email final
+T02 | OK | Score=0 | Ruta=Error Handling | Entrada=Lead sin email valido en cuerpo | Esperado=Registrar datos faltantes
+T03 | OK | Score=41 | Ruta=Datos faltantes | Entrada=Lead con mensaje ambiguo y sin empresa | Esperado=Pedir correccion antes de IA final
+T04 | OK | Score=94 | Ruta=HITL aprobado | Entrada=Lead VIP aprobado por humano | Esperado=Enviar Gmail en Thread ID
+T05 | OK | Score=73 | Ruta=HITL rechazado | Entrada=Lead rechazado por humano | Esperado=No contactar y registrar rechazo

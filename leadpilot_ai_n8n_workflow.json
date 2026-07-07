@@ -1,0 +1,484 @@
+{
+  "name": "LeadPilot AI - Ecosistema de Automatizacion IA",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "timezone": "America/Argentina/Buenos_Aires"
+  },
+  "tags": [
+    {
+      "name": "TP Final"
+    },
+    {
+      "name": "AI Automation"
+    }
+  ],
+  "nodes": [
+    {
+      "parameters": {
+        "filters": {
+          "q": "subject:(Lead OR Consulta OR Presupuesto) newer_than:1d"
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "id": "gmail-trigger",
+      "name": "01 Trigger Gmail - Nuevo lead desde ahora",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [
+        -940,
+        80
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GMAIL_CREDENTIAL_ID",
+          "name": "Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "lead_email",
+              "value": "={{$json.from.value[0].address}}",
+              "type": "string"
+            },
+            {
+              "name": "lead_nombre",
+              "value": "={{$json.from.value[0].name || \"Sin nombre\"}}",
+              "type": "string"
+            },
+            {
+              "name": "asunto",
+              "value": "={{$json.subject}}",
+              "type": "string"
+            },
+            {
+              "name": "mensaje",
+              "value": "={{$json.textPlain || $json.snippet}}",
+              "type": "string"
+            },
+            {
+              "name": "thread_id",
+              "value": "={{$json.threadId}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "normalize",
+      "name": "02 Normalizar variables dinamicas",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": "={{$env.AIRTABLE_BASE_ID}}",
+        "table": "Leads",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{$json.lead_email}}",
+            "Nombre": "={{$json.lead_nombre}}",
+            "Asunto": "={{$json.asunto}}",
+            "Mensaje Original": "={{$json.mensaje}}",
+            "Thread ID": "={{$json.thread_id}}",
+            "Estado": "Pendiente IA",
+            "Fecha Ingreso": "={{$now}}"
+          }
+        }
+      },
+      "id": "airtable-upsert",
+      "name": "03 Airtable - Registrar lead",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        80
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AIRTABLE_CREDENTIAL_ID",
+          "name": "Airtable Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Sos un analista comercial B2B. Devolve SOLO JSON valido con categoria, score_0_100, prioridad, datos_faltantes, resumen, respuesta_sugerida, requiere_aprobacion."
+            },
+            {
+              "role": "user",
+              "content": "Lead: {{$json.lead_nombre}} <{{$json.lead_email}}>\nAsunto: {{$json.asunto}}\nMensaje: {{$json.mensaje}}\nEvalua fit, urgencia y redacta respuesta breve."
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 700,
+          "temperature": 0.2,
+          "responseFormat": "json_object"
+        }
+      },
+      "id": "openai",
+      "name": "04 OpenAI - Clasificar y redactar propuesta",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        80
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{JSON.parse($json.message.content).datos_faltantes.length}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ]
+        }
+      },
+      "id": "if-missing",
+      "name": "05 IF - Datos faltantes o lead incompleto",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "={{$env.AIRTABLE_BASE_ID}}",
+        "table": "Errores",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Origen": "Validacion de datos",
+            "Detalle": "={{JSON.stringify(JSON.parse($json.message.content).datos_faltantes)}}",
+            "Lead Email": "={{$json.lead_email}}",
+            "Estado": "Pendiente correccion",
+            "Fecha": "={{$now}}"
+          }
+        }
+      },
+      "id": "airtable-error-data",
+      "name": "06 Error Handling - Registrar datos faltantes",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -80
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AIRTABLE_CREDENTIAL_ID",
+          "name": "Airtable Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{$env.SLACK_APPROVAL_CHANNEL}}",
+        "text": "*Lead requiere aprobacion humana*\nNombre: {{$json.lead_nombre}}\nEmail: {{$json.lead_email}}\nScore: {{JSON.parse($json.message.content).score_0_100}}\nResumen: {{JSON.parse($json.message.content).resumen}}\nRespuesta propuesta:\n{{JSON.parse($json.message.content).respuesta_sugerida}}\n\nAprobar: {{$env.N8N_WEBHOOK_URL}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=aprobado\nRechazar: {{$env.N8N_WEBHOOK_URL}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=rechazado"
+      },
+      "id": "slack-approval",
+      "name": "07 Slack - Solicitar aprobacion HITL",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        240,
+        160
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_CREDENTIAL_ID",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "aprobar-lead",
+        "responseMode": "responseNode"
+      },
+      "id": "approval-webhook",
+      "name": "08 Webhook - Esperar decision humana",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{$json.query.decision}}",
+              "rightValue": "aprobado",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      },
+      "id": "if-approved",
+      "name": "09 IF - Aprobado por humano",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        720,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toList": "={{$json.lead_email}}",
+        "subject": "={{\"Propuesta para \" + $json.lead_nombre}}",
+        "message": "={{JSON.parse($json.message.content).respuesta_sugerida}}",
+        "threadId": "={{$json.thread_id}}"
+      },
+      "id": "gmail-send",
+      "name": "10 Gmail - Enviar respuesta aprobada en hilo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        980,
+        60
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GMAIL_CREDENTIAL_ID",
+          "name": "Gmail OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": "={{$env.AIRTABLE_BASE_ID}}",
+        "table": "Leads",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado": "Contactado",
+            "Decision Humana": "Aprobado",
+            "Fecha Ultima Accion": "={{$now}}"
+          }
+        }
+      },
+      "id": "airtable-update-ok",
+      "name": "11 Airtable - Actualizar estado final",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        60
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AIRTABLE_CREDENTIAL_ID",
+          "name": "Airtable Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "={{$env.AIRTABLE_BASE_ID}}",
+        "table": "Errores",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Origen": "Decision humana",
+            "Detalle": "Lead rechazado o requiere revision manual",
+            "Lead Email": "={{$json.lead_email}}",
+            "Estado": "Cerrado manual",
+            "Fecha": "={{$now}}"
+          }
+        }
+      },
+      "id": "airtable-rejected",
+      "name": "12 Ruta alternativa - Registrar rechazo",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        980,
+        280
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AIRTABLE_CREDENTIAL_ID",
+          "name": "Airtable Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Variables: AIRTABLE_BASE_ID, SLACK_APPROVAL_CHANNEL, N8N_WEBHOOK_URL. Sin API keys hardcodeadas. Filtro Gmail desde ahora. Error handling registra fallas y datos faltantes."
+      },
+      "id": "sticky",
+      "name": "Notas de arquitectura limpia",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -940,
+        -260
+      ]
+    }
+  ],
+  "connections": {
+    "01 Trigger Gmail - Nuevo lead desde ahora": {
+      "main": [
+        [
+          {
+            "node": "02 Normalizar variables dinamicas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 Normalizar variables dinamicas": {
+      "main": [
+        [
+          {
+            "node": "03 Airtable - Registrar lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 Airtable - Registrar lead": {
+      "main": [
+        [
+          {
+            "node": "04 OpenAI - Clasificar y redactar propuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 OpenAI - Clasificar y redactar propuesta": {
+      "main": [
+        [
+          {
+            "node": "05 IF - Datos faltantes o lead incompleto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 IF - Datos faltantes o lead incompleto": {
+      "main": [
+        [
+          {
+            "node": "06 Error Handling - Registrar datos faltantes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "07 Slack - Solicitar aprobacion HITL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 Slack - Solicitar aprobacion HITL": {
+      "main": [
+        [
+          {
+            "node": "08 Webhook - Esperar decision humana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "08 Webhook - Esperar decision humana": {
+      "main": [
+        [
+          {
+            "node": "09 IF - Aprobado por humano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "09 IF - Aprobado por humano": {
+      "main": [
+        [
+          {
+            "node": "10 Gmail - Enviar respuesta aprobada en hilo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "12 Ruta alternativa - Registrar rechazo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10 Gmail - Enviar respuesta aprobada en hilo": {
+      "main": [
+        [
+          {
+            "node": "11 Airtable - Actualizar estado final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
