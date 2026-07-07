@@ -210,23 +210,23 @@
     },
     {
       "parameters": {
-        "resource": "message",
-        "operation": "post",
-        "channel": "={{$env.SLACK_APPROVAL_CHANNEL}}",
-        "text": "*Lead requiere aprobacion humana*\nNombre: {{$json.lead_nombre}}\nEmail: {{$json.lead_email}}\nScore: {{JSON.parse($json.message.content).score_0_100}}\nResumen: {{JSON.parse($json.message.content).resumen}}\nRespuesta propuesta:\n{{JSON.parse($json.message.content).respuesta_sugerida}}\n\nAprobar: {{$env.N8N_WEBHOOK_URL}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=aprobado\nRechazar: {{$env.N8N_WEBHOOK_URL}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=rechazado"
+        "operation": "send",
+        "toList": "={{$vars.APPROVER_EMAIL || \"ocapizza@gmail.com\"}}",
+        "subject": "={{\"Aprobacion requerida - Lead \" + $json.lead_nombre}}",
+        "message": "=*Lead requiere aprobacion humana*<br><br>Nombre: {{$json.lead_nombre}}<br>Email: {{$json.lead_email}}<br>Score: {{JSON.parse($json.message.content).score_0_100}}<br><br>Resumen:<br>{{JSON.parse($json.message.content).resumen}}<br><br>Respuesta propuesta:<br>{{JSON.parse($json.message.content).respuesta_sugerida}}<br><br>Aprobar: {{$vars.N8N_WEBHOOK_URL || \"https://delroy2026.app.n8n.cloud\"}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=aprobado<br>Rechazar: {{$vars.N8N_WEBHOOK_URL || \"https://delroy2026.app.n8n.cloud\"}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=rechazado"
       },
       "id": "slack-approval",
-      "name": "07 Slack - Solicitar aprobacion HITL",
-      "type": "n8n-nodes-base.slack",
-      "typeVersion": 1,
+      "name": "07 Gmail - Solicitar aprobacion HITL",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
       "position": [
         240,
         160
       ],
       "credentials": {
-        "slackApi": {
-          "id": "SLACK_CREDENTIAL_ID",
-          "name": "Slack Bot"
+        "gmailOAuth2": {
+          "id": "GMAIL_CREDENTIAL_ID",
+          "name": "Gmail account"
         }
       }
     },
@@ -354,7 +354,7 @@
     },
     {
       "parameters": {
-        "content": "Variables: AIRTABLE_BASE_ID, SLACK_APPROVAL_CHANNEL, N8N_WEBHOOK_URL. Sin API keys hardcodeadas. Filtro Gmail desde ahora. Error handling registra fallas y datos faltantes."
+        "content": "Variables: APPROVER_EMAIL, N8N_WEBHOOK_URL. Sin API keys hardcodeadas. Filtro Gmail desde ahora. Error handling registra fallas y datos faltantes. HITL por Gmail."
       },
       "id": "sticky",
       "name": "Notas de arquitectura limpia",
@@ -422,18 +422,7 @@
         ],
         [
           {
-            "node": "07 Slack - Solicitar aprobacion HITL",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "07 Slack - Solicitar aprobacion HITL": {
-      "main": [
-        [
-          {
-            "node": "08 Webhook - Esperar decision humana",
+            "node": "07 Gmail - Solicitar aprobacion HITL",
             "type": "main",
             "index": 0
           }
@@ -474,6 +463,17 @@
         [
           {
             "node": "11 Airtable - Actualizar estado final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 Gmail - Solicitar aprobacion HITL": {
+      "main": [
+        [
+          {
+            "node": "08 Webhook - Esperar decision humana",
             "type": "main",
             "index": 0
           }
