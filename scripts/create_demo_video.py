@@ -84,72 +84,79 @@ def image_slide(title, image_name, caption):
 slides = [
     (
         text_slide(
-            "Demo de entrega",
+            "Video demo - LeadPilot AI",
             [
-                "Automatizacion de gestion de leads B2B con Gmail, Airtable, OpenAI y n8n.",
-                "El flujo registra, clasifica, solicita aprobacion humana y deja trazabilidad.",
-                "OpenAI queda listo para que el profesor conecte su propia API key.",
+                "Objetivo: demostrar el flujo completo sin exponer API keys ni credenciales.",
+                "Recorrido del demo: Trigger en Gmail, procesamiento en n8n y resultado final registrado.",
+                "Duracion preparada para la consigna: 3 minutos.",
             ],
             (36, 110, 185),
         ),
-        20,
+        16,
     ),
     (
         image_slide(
-            "Arquitectura",
-            "01_diagrama_arquitectura.png",
-            "Gmail dispara el flujo. n8n orquesta. Airtable funciona como memoria operativa. OpenAI clasifica y redacta. Gmail resuelve la aprobacion humana y la respuesta final.",
-        ),
-        25,
-    ),
-    (
-        image_slide(
-            "Workflow n8n",
+            "1. Trigger",
             "02_flujo_n8n_evidencia.png",
-            "El workflow incluye trigger, normalizacion, registro en Airtable, clasificacion IA, control de datos faltantes, aprobacion HITL y rutas de cierre.",
-        ),
-        30,
-    ),
-    (
-        image_slide(
-            "Base Airtable",
-            "03_airtable_schema_evidencia.png",
-            "La base tiene tablas Leads, Clientes y Errores. Permite seguir estados, decision humana, score de IA, hilo de Gmail y errores.",
-        ),
-        25,
-    ),
-    (
-        image_slide(
-            "Pruebas",
-            "04_test_estres_evidencia.png",
-            "Se documentaron casos de prueba para lead completo, datos faltantes, rechazo humano, error de API y control anti bucle.",
+            "El flujo comienza con el nodo Gmail Trigger. Escucha correos recientes con asuntos relacionados a Lead, Consulta o Presupuesto. El filtro temporal newer_than:1d ayuda a evitar reprocesos y bucles.",
         ),
         25,
     ),
     (
         text_slide(
-            "Estado final",
+            "Entrada esperada",
             [
-                "GitHub esta actualizado con README, workflow n8n, esquema Airtable, prompt y evidencias.",
-                "Airtable ya esta creado y conectado con credencial PAT.",
-                "Gmail ya esta conectado en n8n.",
-                "Solo falta que el profesor agregue su credencial OpenAI para ejecutar end-to-end.",
+                "Un potencial cliente envia un email con nombre, email, asunto y mensaje comercial.",
+                "El trigger toma el correo y entrega esas variables al orquestador.",
+                "No se muestran credenciales ni configuraciones sensibles durante el demo.",
+            ],
+            (36, 110, 185),
+        ),
+        18,
+    ),
+    (
+        image_slide(
+            "2. Procesamiento en n8n",
+            "02_flujo_n8n_evidencia.png",
+            "n8n normaliza variables, registra el lead en Airtable, llama a OpenAI para clasificar y redactar, evalua datos faltantes con IF y deriva a la ruta correcta.",
+        ),
+        30,
+    ),
+    (
+        image_slide(
+            "Human-in-the-loop",
+            "01_diagrama_arquitectura.png",
+            "Antes de contactar al cliente, el flujo solicita aprobacion humana por Gmail. Si se aprueba, envia la respuesta final; si se rechaza, registra la decision y no contacta al lead.",
+        ),
+        24,
+    ),
+    (
+        image_slide(
+            "3. Resultado final",
+            "03_airtable_schema_evidencia.png",
+            "El resultado queda trazado en Airtable: estado del lead, score de IA, prioridad, thread de Gmail, decision humana, respuesta sugerida y errores cuando corresponde.",
+        ),
+        26,
+    ),
+    (
+        image_slide(
+            "Camino infeliz",
+            "04_test_estres_evidencia.png",
+            "El test de estres incluye datos incompletos, rechazo humano y fallas controladas. Esos casos verifican filtros, rutas de error y trazabilidad.",
+        ),
+        21,
+    ),
+    (
+        text_slide(
+            "Cierre de demo",
+            [
+                "Entregables: PDF de arquitectura, JSON de n8n, link de Airtable en README, capturas y video.",
+                "Seguridad: no hay API keys en GitHub ni en el video.",
+                "OpenAI queda listo para que el profesor conecte su propia API key durante la correccion.",
             ],
             (35, 139, 91),
         ),
-        25,
-    ),
-    (
-        text_slide(
-            "Links para correccion",
-            [
-                "Repositorio: https://github.com/ocapizza/leadpilot-ai-tp-final",
-                "Airtable Leads: https://airtable.com/appRAWorY6yPb4QJn/tblEx4UKF4j0bkVvr/viwd1TlkGIsdGkjva",
-                "n8n Cloud: https://delroy2026.app.n8n.cloud/workflow/qSfCEYFOYzLFvlGc?projectId=KJrQfW9cIoac0mkH",
-            ],
-            (86, 99, 190),
-        ),
-        30,
+        20,
     ),
 ]
 
