@@ -92,7 +92,7 @@ slides = [
             ],
             (36, 110, 185),
         ),
-        5,
+        20,
     ),
     (
         image_slide(
@@ -100,7 +100,7 @@ slides = [
             "01_diagrama_arquitectura.png",
             "Gmail dispara el flujo. n8n orquesta. Airtable funciona como memoria operativa. OpenAI clasifica y redacta. Gmail resuelve la aprobacion humana y la respuesta final.",
         ),
-        7,
+        25,
     ),
     (
         image_slide(
@@ -108,7 +108,7 @@ slides = [
             "02_flujo_n8n_evidencia.png",
             "El workflow incluye trigger, normalizacion, registro en Airtable, clasificacion IA, control de datos faltantes, aprobacion HITL y rutas de cierre.",
         ),
-        7,
+        30,
     ),
     (
         image_slide(
@@ -116,7 +116,7 @@ slides = [
             "03_airtable_schema_evidencia.png",
             "La base tiene tablas Leads, Clientes y Errores. Permite seguir estados, decision humana, score de IA, hilo de Gmail y errores.",
         ),
-        7,
+        25,
     ),
     (
         image_slide(
@@ -124,7 +124,7 @@ slides = [
             "04_test_estres_evidencia.png",
             "Se documentaron casos de prueba para lead completo, datos faltantes, rechazo humano, error de API y control anti bucle.",
         ),
-        7,
+        25,
     ),
     (
         text_slide(
@@ -137,7 +137,7 @@ slides = [
             ],
             (35, 139, 91),
         ),
-        6,
+        25,
     ),
     (
         text_slide(
@@ -149,7 +149,7 @@ slides = [
             ],
             (86, 99, 190),
         ),
-        8,
+        30,
     ),
 ]
 

@@ -20,6 +20,7 @@ LeadPilot AI automatiza la gestion de leads B2B recibidos por Gmail. El sistema 
 - `tests/test_stress_log.txt`: resultado de 5 pruebas documentadas.
 - `evidencias/*.png`: capturas/evidencias para adjuntar en GitHub.
 - `evidencias/demo_leadpilot_ai.mp4`: video demo corto para la correccion.
+- `CHECKLIST_ENTREGA.md`: verificacion punto por punto contra la consigna.
 
 ## Variables requeridas en n8n
 - `AIRTABLE_BASE_ID`
