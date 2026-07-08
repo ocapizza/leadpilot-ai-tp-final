@@ -151,6 +151,7 @@
       "name": "04 OpenAI - Clasificar y redactar propuesta",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1,
+      "continueOnFail": true,
       "position": [
         -260,
         80
@@ -159,6 +160,70 @@
         "openAiApi": {
           "id": "OPENAI_CREDENTIAL_ID",
           "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{$json.error?.message || !$json.message?.content ? \"error\" : \"ok\"}}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      },
+      "id": "if-openai-error",
+      "name": "04b IF - Error API IA",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "resource": "record",
+        "operation": "create",
+        "base": {
+          "mode": "id",
+          "value": "appRAWorY6yPb4QJn"
+        },
+        "table": {
+          "mode": "id",
+          "value": "tblPzlExjEdmdvXwU",
+          "cachedResultName": "Errores"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Origen": "OpenAI API",
+            "Detalle": "={{$json.error?.message || $json.error || \"Falla de API IA sin detalle\"}}",
+            "Lead Email": "={{$json.lead_email}}",
+            "Estado": "Pendiente correccion",
+            "Fecha": "={{$now}}"
+          }
+        }
+      },
+      "id": "airtable-error-openai",
+      "name": "04c Error Handling - Registrar fallo API IA",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        200,
+        -120
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "AIRTABLE_CREDENTIAL_ID",
+          "name": "Airtable Personal Access Token account"
         }
       }
     },
@@ -182,7 +247,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        -20,
+        200,
         80
       ]
     },
@@ -229,9 +294,9 @@
     {
       "parameters": {
         "operation": "send",
-        "toList": "={{$vars.APPROVER_EMAIL || \"ocapizza@gmail.com\"}}",
+        "toList": "={{$vars.APPROVER_EMAIL}}",
         "subject": "={{\"Aprobacion requerida - Lead \" + $json.lead_nombre}}",
-        "message": "=*Lead requiere aprobacion humana*<br><br>Nombre: {{$json.lead_nombre}}<br>Email: {{$json.lead_email}}<br>Score: {{JSON.parse($json.message.content).score_0_100}}<br><br>Resumen:<br>{{JSON.parse($json.message.content).resumen}}<br><br>Respuesta propuesta:<br>{{JSON.parse($json.message.content).respuesta_sugerida}}<br><br>Aprobar: {{$vars.N8N_WEBHOOK_URL || \"https://delroy2026.app.n8n.cloud\"}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=aprobado<br>Rechazar: {{$vars.N8N_WEBHOOK_URL || \"https://delroy2026.app.n8n.cloud\"}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=rechazado"
+        "message": "=*Lead requiere aprobacion humana*<br><br>Nombre: {{$json.lead_nombre}}<br>Email: {{$json.lead_email}}<br>Score: {{JSON.parse($json.message.content).score_0_100}}<br><br>Resumen:<br>{{JSON.parse($json.message.content).resumen}}<br><br>Respuesta propuesta:<br>{{JSON.parse($json.message.content).respuesta_sugerida}}<br><br>Aprobar: {{$vars.N8N_WEBHOOK_URL}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=aprobado<br>Rechazar: {{$vars.N8N_WEBHOOK_URL}}/webhook/aprobar-lead?thread={{$json.thread_id}}&decision=rechazado"
       },
       "id": "slack-approval",
       "name": "07 Gmail - Solicitar aprobacion HITL",
@@ -441,6 +506,24 @@
     },
     "04 OpenAI - Clasificar y redactar propuesta": {
       "main": [
+        [
+          {
+            "node": "04b IF - Error API IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04b IF - Error API IA": {
+      "main": [
+        [
+          {
+            "node": "04c Error Handling - Registrar fallo API IA",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "05 IF - Datos faltantes o lead incompleto",

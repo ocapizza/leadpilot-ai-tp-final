@@ -6,3 +6,4 @@ T02 | OK | Score=0 | Ruta=Error Handling | Entrada=Lead sin email valido en cuer
 T03 | OK | Score=41 | Ruta=Datos faltantes | Entrada=Lead con mensaje ambiguo y sin empresa | Esperado=Pedir correccion antes de IA final
 T04 | OK | Score=94 | Ruta=HITL aprobado | Entrada=Lead VIP aprobado por humano | Esperado=Enviar Gmail en Thread ID
 T05 | OK | Score=73 | Ruta=HITL rechazado | Entrada=Lead rechazado por humano | Esperado=No contactar y registrar rechazo
+T06 | OK | Score=N/A | Ruta=Error Handling API IA | Entrada=Simulacion de error OpenAI/credencial faltante | Esperado=Registrar fallo en tabla Errores y no contactar al cliente

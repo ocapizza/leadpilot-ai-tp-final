@@ -28,6 +28,7 @@ LeadPilot AI automatiza la gestion de leads B2B recibidos por Gmail. El sistema 
 - `N8N_WEBHOOK_URL`
 
 Las credenciales de Gmail, Airtable y OpenAI deben configurarse en n8n Credentials. No se incluyen API keys ni secretos en el JSON. La credencial de OpenAI queda pendiente para que el profesor use su propia API key al corregir.
+`APPROVER_EMAIL` y `N8N_WEBHOOK_URL` deben cargarse como variables de n8n para evitar datos hardcodeados.
 
 ## Link a base de datos
 [Airtable - tabla Leads](https://airtable.com/appRAWorY6yPb4QJn/tblEx4UKF4j0bkVvr/viwd1TlkGIsdGkjva)
@@ -43,5 +44,5 @@ Las credenciales de Gmail, Airtable y OpenAI deben configurarse en n8n Credentia
 - Prompt IA dinamico con variables del sistema.
 - Max tokens limitado para optimizar costos.
 - HITL antes de contactar al cliente final.
-- Ruta de error para datos faltantes y fallas de API.
+- Ruta de error para datos faltantes y fallas de API IA.
 - Estados claros en Airtable para trazabilidad.
